@@ -1,6 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
-import Bus from 'App/Models/busModel'
+import Bus from 'App/Models/adminBus'
 
 export default class PetsController {
   public async index(ctx: HttpContextContract) {
@@ -61,6 +61,15 @@ export default class PetsController {
         return response.status(400).send('bus is already deleted!!')
       }
       return response.status(200).send('successfully deleted data!!')
+    } catch (error) {
+      return response.status(500).send(error)
+    }
+  }
+
+  public async findAllBus({ request, response }: HttpContextContract) {
+    try {
+      const bus = await Bus.find()
+      return response.status(200).send(bus)
     } catch (error) {
       return response.status(500).send(error)
     }

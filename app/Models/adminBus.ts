@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
-import { IBus } from 'App/interfaces/schemainterfaces'
+import { IAdminBus } from 'App/interfaces/schemainterfaces'
 
-const busSchema = new mongoose.Schema<IBus>({
-  UserId: {
+const AdminBusSchema = new mongoose.Schema<IAdminBus>({
+  AdminId: {
     type: mongoose.Types.ObjectId,
-    ref: 'User',
+    ref: 'Admin',
   },
   Number_Plate: String,
   Bus_Type: {
@@ -37,5 +37,5 @@ const busSchema = new mongoose.Schema<IBus>({
   //   },
 })
 
-const Bus = mongoose.model('Bus', busSchema)
-export default Bus
+const AdminBus = mongoose.model('Bus', AdminBusSchema)
+export default AdminBus

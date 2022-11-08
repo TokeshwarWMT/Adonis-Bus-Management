@@ -1,16 +1,20 @@
 import mongoose from 'mongoose'
-import { IUser } from 'App/interfaces/schemainterfaces'
+import { IAdmin } from 'App/interfaces/schemainterfaces'
 import bcrypt from 'bcrypt'
 
-const userSchema = new mongoose.Schema<IUser>({
+const adminSchema = new mongoose.Schema<IAdmin>({
   Name: String,
   Mobile: Number,
   Email: String,
   Password: String,
   Address: String,
+  is_Admin: {
+    type: Boolean,
+    default: true,
+  },
 })
 
-userSchema.pre('save', async function (next) {
+adminSchema.pre('save', async function (next) {
   try {
     const salt = await bcrypt.genSalt(10)
     if (this.Password) {
@@ -23,5 +27,5 @@ userSchema.pre('save', async function (next) {
   }
 })
 
-const User = mongoose.model('User', userSchema)
-export default User
+const Admin = mongoose.model('Admin', adminSchema)
+export default Admin
