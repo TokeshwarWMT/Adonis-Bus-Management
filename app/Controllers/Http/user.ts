@@ -2,6 +2,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import User from 'App/Models/user'
 import Bus from 'App/Models/adminBus'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 export default class PetsController {
   public async index(ctx: HttpContextContract) {
@@ -24,7 +26,36 @@ export default class PetsController {
     } catch (error) {
       return response.status(500).send(error)
     }
-  };
+  }
+
+  public async login({ request, response, params }: HttpContextContract) {
+    try {
+      let Email = request.body().Email
+      let Pass = request.body().Password
+
+      const user = await User.findOne({ email: Email })
+      if (!user) {
+        return response.status(400).send('email is incorrect!!')
+      }
+      const password = user?.Password as string
+      const passMatch = await bcrypt.compare(Pass, password)
+
+      if (passMatch) {
+        const token = jwt.sign(
+          {
+            id: user?._id,
+          },
+          'webmob'
+        )
+        response.status(201).send({ status: true, data: token })
+      } else {
+        return response.status(400).send({ status: false, message: 'password is not correct..!!' })
+      }
+    } catch (error) {
+      console.log(error)
+      return response.status(500).send(error)
+    }
+  }
 
   public async get({ request, response, params }: HttpContextContract) {
     try {
@@ -37,7 +68,7 @@ export default class PetsController {
     } catch (error) {
       return response.status(500).send(error)
     }
-  };
+  }
 
   public async update({ request, response, params }: HttpContextContract) {
     try {
@@ -49,7 +80,7 @@ export default class PetsController {
     } catch (error) {
       return response.status(500).send(error)
     }
-  };
+  }
 
   public async delete({ request, response, params }: HttpContextContract) {
     try {
@@ -73,5 +104,3 @@ export default class PetsController {
     }
   }
 }
-
-
