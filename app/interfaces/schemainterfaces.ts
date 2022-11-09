@@ -38,5 +38,6 @@ export interface IBusBook {
   Starting_At: string
   Ending_At: string
   Bus_Type: string
-  // Price: number
+  Seat_Number: number
+  Price: number
 }

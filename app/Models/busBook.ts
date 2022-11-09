@@ -16,7 +16,12 @@ const busBookSchema = new mongoose.Schema<IBusBook>({
     type: String,
     enum: ['Slipper', 'AC', 'Non-AC'],
   },
-//   Price: Number,
+  Seat_Number: {
+    type: Number,
+    min: 1,
+    max: 50
+  },
+  Price: Number,
 })
 
 const busBook = mongoose.model('busBook', busBookSchema)

@@ -27,3 +27,7 @@ Route.delete('/user/:id', 'user.delete')
 Route.get('/user', 'user.findAllBus')
 
 Route.post('/busBook', 'busBook.book')
+Route.get('/busBook/:id', 'busBook.get')
+Route.get('/busBook', 'busBook.findAllBookings')
+Route.put('/busBook/:id', 'busBook.update')
+Route.delete('/busBook/:id', 'busBook.delete')
