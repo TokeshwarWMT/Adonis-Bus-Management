@@ -1,6 +1,9 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import AdminBus from 'App/Models/adminBus'
-import Routes from 'App/Models/busRoutes'
+// import AdminBus from 'App/Models/adminBus'
+// import Routes from 'App/Models/busRoute'
+
+
+import {User,AdminBus,BusBook}  from  "../../Models/index"
 
 export default class PetsController {
   public async index(ctx: HttpContextContract) {
@@ -10,7 +13,7 @@ export default class PetsController {
   public async create({ request, response, params }: HttpContextContract) {
     try {
       const data = request.body()
-      const { BusId, routes } = data;
+      const { BusId, Starting_At, Ending_At, routes } = data
       const bus = await AdminBus.findById(BusId)
       if (!bus) {
         return response.status(404).send('bus not found!!')
@@ -48,7 +51,7 @@ export default class PetsController {
     try {
       const { id } = params
       const data = request.body()
-      const { BusId, routes } = data
+      const { BusId, Starting_At, Ending_At, routes } = data
       const bus = await AdminBus.findById(BusId)
       if (!bus) {
         return response.status(404).send('bus not found!!')
@@ -72,4 +75,5 @@ export default class PetsController {
       return response.status(500).send(error)
     }
   }
+
 }

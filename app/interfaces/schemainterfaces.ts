@@ -35,9 +35,15 @@ export interface IAdminBus {
 export interface IBusBook {
   UserId: ObjectId
   BusId: ObjectId
-  Starting_At: string
-  Ending_At: string
+  RouteId: ObjectId
   Bus_Type: string
   Seat_Number: number
   Price: number
+}
+
+export interface IRoutes {
+  BusId: ObjectId,
+  Starting_At: string
+  Ending_At: string
+  routes: string
 }

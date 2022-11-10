@@ -57,6 +57,7 @@ export default class PetsController {
     }
   }
 
+  
   public async get({ request, response, params }: HttpContextContract) {
     try {
       const { id } = params

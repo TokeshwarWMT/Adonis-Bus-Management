@@ -10,8 +10,10 @@ const busBookSchema = new mongoose.Schema<IBusBook>({
     type: mongoose.Types.ObjectId,
     ref: 'Bus',
   },
-  Starting_At: String,
-  Ending_At: String,
+  RouteId: {
+    type: mongoose.Types.ObjectId,
+    ref: 'BusRoute',
+  },
   Bus_Type: {
     type: String,
     enum: ['Slipper', 'AC', 'Non-AC'],
@@ -19,10 +21,9 @@ const busBookSchema = new mongoose.Schema<IBusBook>({
   Seat_Number: {
     type: Number,
     min: 1,
-    max: 50
+    max: 50,
   },
   Price: Number,
 })
 
-const busBook = mongoose.model('busBook', busBookSchema)
-export default busBook
+export default busBookSchema

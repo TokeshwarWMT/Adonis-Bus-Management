@@ -1,8 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
-import BusBook from 'App/Models/busBook'
-import User from 'App/Models/user'
-import AdminBus from 'App/Models/adminBus'
+
+import {User,AdminBus,BusBook}  from  "../../Models/index"
 
 export default class PetsController {
   public async index(ctx: HttpContextContract) {
@@ -12,7 +11,7 @@ export default class PetsController {
   public async book({ request, response }: HttpContextContract) {
     try {
       const data = request.body()
-      const { UserId, BusId, Starting_At, Ending_At, Seat_Number, Bus_Type } = data
+      const { UserId, BusId, RouteId, Seat_Number, Bus_Type } = data
       const user = await User.findById(UserId)
       if (!user) {
         return response.status(404).send('user does not exists!!')
@@ -46,13 +45,14 @@ export default class PetsController {
   public async get({ request, response, params }: HttpContextContract) {
     try {
       const { id } = params
-      const busBook = await BusBook.findById(id)
+      const busBook = await BusBook.findById(id).populate("RouteId")
       if (!busBook) {
         return response.status(404).send('booking is not available!!')
       }
       return response.status(200).send(busBook)
     } catch (error) {
-      return response.status(500).send(error)
+      // return response.status(500).send(error)
+      console.log(error)
     }
   }
 
@@ -69,7 +69,7 @@ export default class PetsController {
     try {
       const { id } = params
       const data = request.body()
-      const { UserId, BusId, Starting_At, Ending_At, Seat_Number, Bus_Type } = data
+      const { UserId, BusId, RouteId, Seat_Number, Bus_Type } = data
       const user = await User.findById(UserId)
       if (!user) {
         return response.status(404).send('user does not exists!!')

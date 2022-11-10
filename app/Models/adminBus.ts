@@ -36,6 +36,4 @@ const AdminBusSchema = new mongoose.Schema<IAdminBus>({
   //     required: true,
   //   },
 })
-
-const AdminBus = mongoose.model('Bus', AdminBusSchema)
-export default AdminBus
+export default AdminBusSchema
