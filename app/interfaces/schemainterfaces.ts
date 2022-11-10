@@ -42,7 +42,7 @@ export interface IBusBook {
 }
 
 export interface IRoutes {
-  BusId: ObjectId,
+  BusId: ObjectId
   Starting_At: string
   Ending_At: string
   routes: string

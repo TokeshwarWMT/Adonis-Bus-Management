@@ -2,12 +2,11 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // import AdminBus from 'App/Models/adminBus'
 // import Routes from 'App/Models/busRoute'
 
-
-import {User,AdminBus,BusBook}  from  "../../Models/index"
+import { AdminBus, Route } from '../../Models/index'
 
 export default class PetsController {
   public async index(ctx: HttpContextContract) {
-    return Routes.find()
+    return Route.find()
   }
 
   public async create({ request, response, params }: HttpContextContract) {
@@ -18,7 +17,7 @@ export default class PetsController {
       if (!bus) {
         return response.status(404).send('bus not found!!')
       }
-      const route = await Routes.create(data)
+      const route = await Route.create(data)
       return response.status(201).send(route)
     } catch (error) {
       return response.status(500).send(error)
@@ -28,7 +27,7 @@ export default class PetsController {
   public async get({ request, response, params }: HttpContextContract) {
     try {
       const { id } = params
-      const route = await Routes.findById(id)
+      const route = await Route.findById(id)
       if (!route) {
         return response.status(404).send('route does not found!!')
       }
@@ -40,7 +39,7 @@ export default class PetsController {
 
   public async findAllRoutes({ request, response }: HttpContextContract) {
     try {
-      const route = await Routes.find()
+      const route = await Route.find()
       return response.status(200).send(route)
     } catch (error) {
       return response.status(500).send(error)
@@ -56,7 +55,7 @@ export default class PetsController {
       if (!bus) {
         return response.status(404).send('bus not found!!')
       }
-      const route = await Routes.findByIdAndUpdate(id, { $set: data }, { new: true })
+      const route = await Route.findByIdAndUpdate(id, { $set: data }, { new: true })
       return response.status(201).send(route)
     } catch (error) {
       return response.status(200).send(error)
@@ -66,7 +65,7 @@ export default class PetsController {
   public async delete({ request, response, params }: HttpContextContract) {
     try {
       const { id } = params
-      const route = await Routes.findByIdAndRemove(id)
+      const route = await Route.findByIdAndRemove(id)
       if (!route) {
         return response.status(404).send('route is already deleted!!')
       }
@@ -75,5 +74,4 @@ export default class PetsController {
       return response.status(500).send(error)
     }
   }
-
 }

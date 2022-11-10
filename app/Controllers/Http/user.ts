@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
-import User from 'App/Models/user'
-import Bus from 'App/Models/adminBus'
+import { User } from '../../Models/index'
+
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
@@ -57,7 +57,6 @@ export default class PetsController {
     }
   }
 
-  
   public async get({ request, response, params }: HttpContextContract) {
     try {
       const { id } = params
@@ -96,12 +95,12 @@ export default class PetsController {
     }
   }
 
-  public async findAllBus({ request, response }: HttpContextContract) {
-    try {
-      const bus = await Bus.find()
-      return response.status(200).send(bus)
-    } catch (error) {
-      return response.status(500).send(error)
-    }
-  }
+  // public async findAllBus({ request, response }: HttpContextContract) {
+  //   try {
+  //     const bus = await Bus.find()
+  //     return response.status(200).send(bus)
+  //   } catch (error) {
+  //     return response.status(500).send(error)
+  //   }
+  // }
 }
