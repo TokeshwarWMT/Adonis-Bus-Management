@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 
-import {User,AdminBus,BusBook}  from  "../../Models/index"
+import { User, AdminBus, BusBook } from '../../Models/index'
 
 export default class PetsController {
   public async index(ctx: HttpContextContract) {
@@ -42,17 +42,19 @@ export default class PetsController {
     }
   }
 
+
   public async get({ request, response, params }: HttpContextContract) {
     try {
       const { id } = params
-      const busBook = await BusBook.findById(id).populate("RouteId")
+      const busBook = await BusBook.findById(id).populate([
+        { path: 'RouteId', select: '_id Starting_At Ending_At routes' },
+      ])
       if (!busBook) {
         return response.status(404).send('booking is not available!!')
       }
       return response.status(200).send(busBook)
     } catch (error) {
-      // return response.status(500).send(error)
-      console.log(error)
+      return response.status(500).send(error)
     }
   }
 

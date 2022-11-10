@@ -1,4 +1,5 @@
 import mongoose, { ObjectId } from 'mongoose'
+import { Request } from 'express'
 
 export interface IAdmin {
   Name?: string
@@ -46,4 +47,19 @@ export interface IRoutes {
   Starting_At: string
   Ending_At: string
   routes: string
+}
+
+// export interface IAuth {
+//   user?: string
+// }
+
+// declare namespace Express {
+//   export interface IAuth {
+//      user?: string
+//   }
+// }
+
+export interface RequestCustom extends Request {
+  user: string
+  
 }
