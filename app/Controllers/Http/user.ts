@@ -21,6 +21,15 @@ export default class PetsController {
         Address: schema.string({ trim: true }),
       })
       const payload = await request.validate({ schema: newUserSchema })
+      const checkMobile = await User.findOne({ Mobile: payload.Mobile })
+      if (checkMobile) {
+        return response.status(400).send('mobile number is already registered!!')
+      }
+      const checkEmail = await User.findOne({ Email: payload.Email })
+      if (checkEmail) {
+        return response.status(400).send('email is already registered!!')
+      }
+
       const user = await User.create(payload)
       response.status(201).send(user)
     } catch (error) {
@@ -74,7 +83,6 @@ export default class PetsController {
     try {
       const { id } = params
       const data = request.body()
-      console.log(data)
       const user = await User.findByIdAndUpdate(id, { $set: data }, { new: true })
       return response.status(201).send({ data: user, msg: 'successfully updated data!!' })
     } catch (error) {

@@ -1,7 +1,7 @@
 require('dotenv').config()
 import mongoose from 'mongoose'
 import Route from '@ioc:Adonis/Core/Route'
-// import { authentication } from 'App/Middleware/auth'
+import { authentication } from 'App/Middleware/auth'
 
 const DB_URL = process.env.DB_URL as string
 
@@ -23,8 +23,8 @@ Route.get('/adminBus', 'adminBus.findAllBus')
 
 Route.post('/user', 'user.signup')
 Route.post('/userlogin', 'user.login')
-Route.get('/user/:id', 'user.get')
-Route.put('/user/:id', 'user.update')
+Route.get('/user/:id', 'user.get').middleware('authentication')
+Route.put('/user/:id',  'user.update')
 Route.delete('/user/:id', 'user.delete')
 Route.get('/user', 'user.findAllBus')
 

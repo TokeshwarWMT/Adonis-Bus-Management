@@ -61,5 +61,4 @@ export interface IRoutes {
 
 export interface RequestCustom extends Request {
   user: string
-  
 }
