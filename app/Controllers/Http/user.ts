@@ -36,13 +36,13 @@ export default class PetsController {
       profilePic = cloudinaryMeta.secure_url
 
       const checkMobile = await User.findOne({ Mobile: payload.Mobile })
-      // if (checkMobile) {
-      //   return response.status(400).send('mobile number is already registered!!')
-      // }
-      // const checkEmail = await User.findOne({ Email: payload.Email })
-      // if (checkEmail) {
-      //   return response.status(400).send('email is already registered!!')
-      // }
+      if (checkMobile) {
+        return response.status(400).send('mobile number is already registered!!')
+      }
+      const checkEmail = await User.findOne({ Email: payload.Email })
+      if (checkEmail) {
+        return response.status(400).send('email is already registered!!')
+      }
 
       const user = await User.create({ ...payload, profileImage: profilePic })
       response.status(201).send(user)
