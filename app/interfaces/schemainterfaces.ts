@@ -11,6 +11,7 @@ export interface IAdmin {
 }
 
 export interface IUser {
+  profileImage?: object
   Name?: string
   Mobile?: number
   Email?: string

@@ -3,6 +3,7 @@ import { IUser } from 'App/interfaces/schemainterfaces'
 import bcrypt from 'bcrypt'
 
 const userSchema = new mongoose.Schema<IUser>({
+  profileImage: Object,
   Name: String,
   Mobile: Number,
   Email: String,

@@ -1,9 +1,16 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { User } from '../../Models/index'
-
+const cloudinary = require('cloudinary').v2
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+
+cloudinary.config({
+  cloud_name: 'dbv10f3bf',
+  api_key: '474116116625175',
+  api_secret: 'UU-WYsG12QFKvYzA7gVo_u6ZjbI',
+  secure: true,
+})
 
 export default class PetsController {
   public async index(ctx: HttpContextContract) {
@@ -20,17 +27,24 @@ export default class PetsController {
         Confirm_Password: schema.string(),
         Address: schema.string({ trim: true }),
       })
-      const payload = await request.validate({ schema: newUserSchema })
-      const checkMobile = await User.findOne({ Mobile: payload.Mobile })
-      if (checkMobile) {
-        return response.status(400).send('mobile number is already registered!!')
-      }
-      const checkEmail = await User.findOne({ Email: payload.Email })
-      if (checkEmail) {
-        return response.status(400).send('email is already registered!!')
-      }
 
-      const user = await User.create(payload)
+      const payload = await request.validate({ schema: newUserSchema })
+
+      let profilePic = request.file('profile_pic')
+      console.log(profilePic)
+      let cloudinaryMeta = await cloudinary.uploader.upload(profilePic?.tmpPath)
+      profilePic = cloudinaryMeta.secure_url
+
+      const checkMobile = await User.findOne({ Mobile: payload.Mobile })
+      // if (checkMobile) {
+      //   return response.status(400).send('mobile number is already registered!!')
+      // }
+      // const checkEmail = await User.findOne({ Email: payload.Email })
+      // if (checkEmail) {
+      //   return response.status(400).send('email is already registered!!')
+      // }
+
+      const user = await User.create({ ...payload, profileImage: profilePic })
       response.status(201).send(user)
     } catch (error) {
       return response.status(500).send(error)
@@ -83,6 +97,14 @@ export default class PetsController {
     try {
       const { id } = params
       const data = request.body()
+
+      let profilePic = request.file('profile_pic')
+      console.log(profilePic)
+
+      let cloudinaryMeta = await cloudinary.uploader.upload(profilePic?.tmpPath)
+      profilePic = cloudinaryMeta.secure_url
+
+      data.profile_pic = profilePic
       const user = await User.findByIdAndUpdate(id, { $set: data }, { new: true })
       return response.status(201).send({ data: user, msg: 'successfully updated data!!' })
     } catch (error) {
