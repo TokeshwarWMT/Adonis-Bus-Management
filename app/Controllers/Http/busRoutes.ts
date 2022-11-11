@@ -17,6 +17,14 @@ export default class PetsController {
       if (!bus) {
         return response.status(404).send('bus not found!!')
       }
+      const starting_at = await AdminBus.findOne({ Starting_At })
+      if (!starting_at) {
+        return response.status(404).send('starting place not found!!')
+      }
+      const ending_at = await AdminBus.findOne({ Ending_At })
+      if (!ending_at) {
+        return response.status(404).send('ending place not found!!')
+      }
       const route = await Route.create(data)
       return response.status(201).send(route)
     } catch (error) {

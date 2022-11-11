@@ -1,6 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
-import Admin from 'App/Models/admin'
+import { Admin } from '../../Models/index'
 
 export default class PetsController {
   public async index(ctx: HttpContextContract) {
