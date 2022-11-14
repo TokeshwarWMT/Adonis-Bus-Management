@@ -38,4 +38,3 @@ Route.get('/route/:id', 'busRoutes.get')
 Route.get('/findAllRoutes', 'busRoutes.findAllRoutes')
 Route.put('/route/:id', 'busRoutes.update')
 Route.delete('/route/:id', 'busRoutes.delete')
-'Route'
