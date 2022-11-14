@@ -6,8 +6,8 @@ const routeSchema = new mongoose.Schema<IRoutes>({
     type: mongoose.Types.ObjectId,
     ref: 'Bus',
   },
-  Starting_At: String,
-  Ending_At: String,
+  Starting_At: Object,
+  Ending_At: Object,
   routes: ['String'],
 })
 

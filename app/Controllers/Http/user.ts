@@ -12,7 +12,7 @@ cloudinary.config({
   secure: true,
 })
 
-export default class PetsController {
+export default class BusBooking {
   public async index(ctx: HttpContextContract) {
     return User.find()
   }

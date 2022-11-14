@@ -45,20 +45,10 @@ export interface IBusBook {
 
 export interface IRoutes {
   BusId: ObjectId
-  Starting_At: string
-  Ending_At: string
+  Starting_At: object
+  Ending_At: object
   routes: string
 }
-
-// export interface IAuth {
-//   user?: string
-// }
-
-// declare namespace Express {
-//   export interface IAuth {
-//      user?: string
-//   }
-// }
 
 export interface RequestCustom extends Request {
   user: string

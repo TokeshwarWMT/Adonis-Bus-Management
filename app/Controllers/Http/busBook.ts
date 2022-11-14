@@ -1,15 +1,20 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 
-import { User, AdminBus, BusBook } from '../../Models/index'
+import { User, AdminBus, BusBook, Route } from '../../Models/index'
 
-export default class PetsController {
+export default class BusBooking {
   public async index(ctx: HttpContextContract) {
     return BusBook.find()
   }
 
   public async book({ request, response }: HttpContextContract) {
     try {
+      const newBusBookSchema = schema.create({
+        Bus_Type: schema.enum(['Slipper', 'AC', 'Non-AC']),
+        Seat_Number: schema.number(),
+      })
+      const payload = await request.validate({ schema: newBusBookSchema })
       const data = request.body()
       const { UserId, BusId, RouteId, Seat_Number, Bus_Type } = data
       const user = await User.findById(UserId)
@@ -19,6 +24,10 @@ export default class PetsController {
       const bus = await AdminBus.findById(BusId)
       if (!bus) {
         return response.status(404).send('bus not found!!')
+      }
+      const route = await Route.findById(RouteId)
+      if (!route) {
+        return response.status(404).send('route not found')
       }
       const seat_number = await BusBook.findOne({ Seat_Number })
       if (seat_number) {
@@ -35,8 +44,8 @@ export default class PetsController {
         return response.status(400).send('invalid request!!')
       }
       data.Price = Price
-      const busBook = await BusBook.create(data)
-      return response.status(201).send({ busBook })
+      const busBook = await BusBook.create(payload)
+      return response.status(201).send({ UserId: user.id, BusId: bus.id, route: route.id, busBook })
     } catch (error) {
       return response.status(500).send(error)
     }

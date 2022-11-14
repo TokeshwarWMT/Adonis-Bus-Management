@@ -1,31 +1,38 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
-import { AdminBus } from '../../Models/index'
+import { Admin, AdminBus } from '../../Models/index'
 
-export default class PetsController {
+export default class BusBooking {
   public async index(ctx: HttpContextContract) {
     return AdminBus.find()
   }
 
   public async post({ request, response }: HttpContextContract) {
     try {
-      //   const newBusSchema = schema.create({
-      //     UserId: schema.string({}, [rules.minLength(24), rules.maxLength(24)]),
-      //     Number_Plate: schema.string({}, [rules.minLength(10), rules.maxLength(10)]),
-      //     // Bus_Type: schema.string({}, [rules.exists('Slipper', 'AC', 'Non-AC')]),
-      //     Bus_Type: schema.enum(['Slipper', 'AC', 'Non-AC']),
-      //     // 'Starting_At.Address': schema.string(),
-      //     // 'Ending_At.Address': schema.string(),
-      //     // is_Admin: schema.boolean()
-      //   })
-      //   const payload = await request.validate({ schema: newBusSchema })
-      //   const user = await Bus.create(payload)
-      //   console.log(user)
+      const newBusSchema = schema.create({
+        Number_Plate: schema.string({}, [rules.minLength(10), rules.maxLength(10)]),
+        Bus_Type: schema.enum(['Slipper', 'AC', 'Non-AC']),
+        Starting_At: schema.object().members({
+          Address: schema.string(),
+        }),
+        Ending_At: schema.object().members({
+          Address: schema.string(),
+          Date: schema.date(),
+        }),
+      })
+      const payload = await request.validate({ schema: newBusSchema })
+      // const user = await AdminBus.create(payload)
       const data = request.body()
-      const user = await AdminBus.create(data)
-      response.status(201).send(user)
+      const { AdminId, Number_Plate, Bus_Type, Starting_At, Ending_At } = data
+      const adminid = await Admin.findById(AdminId)
+      if (!adminid) {
+        return response.status(404).send('adminid not found!!')
+      }
+      const user = await AdminBus.create(payload)
+      response.status(201).send({adminId: adminid.id, user})
     } catch (error) {
-      console.log(error.messages)
+      return response.status(500).send(error)
+      // console.log(error)
     }
   }
 

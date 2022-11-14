@@ -18,7 +18,7 @@ const AdminBusSchema = new mongoose.Schema<IAdminBus>({
     },
     Date: {
       type: Date,
-      default: Date.now(),
+      default: new Date(),
     },
   },
   Ending_At: {
@@ -31,9 +31,5 @@ const AdminBusSchema = new mongoose.Schema<IAdminBus>({
       required: true,
     },
   },
-  //   is_Admin: {
-  //     type: Boolean,
-  //     required: true,
-  //   },
 })
 export default AdminBusSchema
