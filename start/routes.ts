@@ -1,7 +1,6 @@
 require('dotenv').config()
 import mongoose from 'mongoose'
 import Route from '@ioc:Adonis/Core/Route'
-// import { authentication } from 'App/Middleware/auth'
 
 const DB_URL = process.env.DB_URL as string
 

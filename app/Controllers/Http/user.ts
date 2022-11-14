@@ -43,7 +43,6 @@ export default class BusBooking {
       if (checkEmail) {
         return response.status(400).send('email is already registered!!')
       }
-
       const user = await User.create({ ...payload, profileImage: profilePic })
       response.status(201).send(user)
     } catch (error) {
@@ -100,12 +99,14 @@ export default class BusBooking {
 
       let profilePic = request.file('profile_pic')
       console.log(profilePic)
-
       let cloudinaryMeta = await cloudinary.uploader.upload(profilePic?.tmpPath)
       profilePic = cloudinaryMeta.secure_url
 
-      data.profile_pic = profilePic
-      const user = await User.findByIdAndUpdate(id, { $set: data }, { new: true })
+      const user = await User.findByIdAndUpdate(
+        id,
+        { ...data, profileImage: profilePic },
+        { new: true }
+      )
       return response.status(201).send({ data: user, msg: 'successfully updated data!!' })
     } catch (error) {
       return response.status(500).send(error)
@@ -124,13 +125,4 @@ export default class BusBooking {
       return response.status(500).send(error)
     }
   }
-
-  // public async findAllBus({ request, response }: HttpContextContract) {
-  //   try {
-  //     const bus = await Bus.find()
-  //     return response.status(200).send(bus)
-  //   } catch (error) {
-  //     return response.status(500).send(error)
-  //   }
-  // }
 }

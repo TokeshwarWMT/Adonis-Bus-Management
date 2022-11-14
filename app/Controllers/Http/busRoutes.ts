@@ -32,7 +32,7 @@ export default class BusBooking {
         address: payload.Starting_At.Address,
         date: payload.Starting_At.Date,
       })
-      // console.log(starting_at)
+  
       if (!starting_at) {
         return response.status(404).send('starting place not found!!')
       }
@@ -40,7 +40,7 @@ export default class BusBooking {
         address: payload.Ending_At.Address,
         date: payload.Ending_At.Date,
       })
-      // console.log(ending_at)
+      
       if (!ending_at) {
         return response.status(404).send('ending place not found!!')
       }
@@ -48,7 +48,6 @@ export default class BusBooking {
       return response.status(201).send({ busId: bus.id, route })
     } catch (error) {
       return response.status(500).send(error)
-      // console.log(error);
     }
   }
 

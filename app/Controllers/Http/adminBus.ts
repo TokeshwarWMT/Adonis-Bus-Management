@@ -21,7 +21,6 @@ export default class BusBooking {
         }),
       })
       const payload = await request.validate({ schema: newBusSchema })
-      // const user = await AdminBus.create(payload)
       const data = request.body()
       const { AdminId, Number_Plate, Bus_Type, Starting_At, Ending_At } = data
       const adminid = await Admin.findById(AdminId)
@@ -32,7 +31,6 @@ export default class BusBooking {
       response.status(201).send({adminId: adminid.id, user})
     } catch (error) {
       return response.status(500).send(error)
-      // console.log(error)
     }
   }
 
