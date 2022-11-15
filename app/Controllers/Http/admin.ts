@@ -1,6 +1,14 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { Admin } from '../../Models/index'
+const cloudinary = require('cloudinary').v2
+
+cloudinary.config({
+  cloud_name: 'dbv10f3bf',
+  api_key: '474116116625175',
+  api_secret: 'UU-WYsG12QFKvYzA7gVo_u6ZjbI',
+  secure: true,
+})
 
 export default class BusBooking {
   public async index(ctx: HttpContextContract) {
@@ -10,6 +18,10 @@ export default class BusBooking {
   public async store({ request, response }: HttpContextContract) {
     try {
       const newAdminSchema = schema.create({
+        profile_pic: schema.file.optional({
+          size: '10mb',
+          extnames: ['jpg', 'png', 'jpeg'],
+        }),
         Name: schema.string({ trim: true }),
         Mobile: schema.number(),
         Email: schema.string({ trim: true }, [rules.email()]),
@@ -18,7 +30,21 @@ export default class BusBooking {
         Address: schema.string({ trim: true }),
       })
       const payload = await request.validate({ schema: newAdminSchema })
-      const admin = await Admin.create(payload)
+
+      let profilePic = request.file('profile_pic')
+      let cloudinaryMeta = await cloudinary.uploader.upload(profilePic?.tmpPath)
+      profilePic = cloudinaryMeta.secure_url
+
+      const checkMobile = await Admin.findOne({ Mobile: payload.Mobile })
+      if (checkMobile) {
+        return response.status(400).send('mobile number is already registered!!')
+      }
+      const checkEmail = await Admin.findOne({ Email: payload.Email })
+      if (checkEmail) {
+        return response.status(400).send('email is already registered!!')
+      }
+
+      const admin = await Admin.create({ ...payload, profileImage: profilePic })
       response.status(201).send(admin)
     } catch (error) {
       return response.status(500).send(error)
@@ -42,7 +68,20 @@ export default class BusBooking {
     try {
       const { id } = params
       const data = request.body()
-      const admin = await Admin.findByIdAndUpdate(id, { $set: data }, { new: true })
+
+      let profilePic
+
+      try {
+        profilePic = request.file('profile_pic')
+        let cloudinaryMeta = await cloudinary.uploader.upload(profilePic?.tmpPath)
+        profilePic = cloudinaryMeta.secure_url
+      } catch (error) {}
+
+      const admin = await Admin.findByIdAndUpdate(
+        id,
+        profilePic ? { ...data, profileImage: profilePic } : { ...data },
+        { new: true }
+      )
       return response.status(201).send({ data: admin, msg: 'successfully updated data!!' })
     } catch (error) {
       return response.status(500).send(error)

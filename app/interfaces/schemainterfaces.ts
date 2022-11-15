@@ -2,6 +2,7 @@ import mongoose, { ObjectId } from 'mongoose'
 import { Request } from 'express'
 
 export interface IAdmin {
+  profileImage?: object
   Name?: string
   Mobile?: number
   Email?: string

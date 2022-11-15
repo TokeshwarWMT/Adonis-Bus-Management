@@ -20,6 +20,10 @@ export default class BusBooking {
   public async signup({ request, response }: HttpContextContract) {
     try {
       const newUserSchema = schema.create({
+        profile_pic: schema.file.optional({
+          size: '10mb',
+          extnames: ['jpg', 'png', 'jpeg'],
+        }),
         Name: schema.string({ trim: true }),
         Mobile: schema.number(),
         Email: schema.string({ trim: true }, [rules.email()]),
@@ -31,7 +35,6 @@ export default class BusBooking {
       const payload = await request.validate({ schema: newUserSchema })
 
       let profilePic = request.file('profile_pic')
-      console.log(profilePic)
       let cloudinaryMeta = await cloudinary.uploader.upload(profilePic?.tmpPath)
       profilePic = cloudinaryMeta.secure_url
 
@@ -97,14 +100,17 @@ export default class BusBooking {
       const { id } = params
       const data = request.body()
 
-      let profilePic = request.file('profile_pic')
-      console.log(profilePic)
-      let cloudinaryMeta = await cloudinary.uploader.upload(profilePic?.tmpPath)
-      profilePic = cloudinaryMeta.secure_url
+      let profilePic
+
+      try {
+        profilePic = request.file('profile_pic')
+        let cloudinaryMeta = await cloudinary.uploader.upload(profilePic?.tmpPath)
+        profilePic = cloudinaryMeta.secure_url
+      } catch (error) {}
 
       const user = await User.findByIdAndUpdate(
         id,
-        { ...data, profileImage: profilePic },
+        profilePic ? { ...data, profileImage: profilePic } : { ...data },
         { new: true }
       )
       return response.status(201).send({ data: user, msg: 'successfully updated data!!' })

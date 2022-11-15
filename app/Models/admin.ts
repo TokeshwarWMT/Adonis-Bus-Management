@@ -3,15 +3,12 @@ import { IAdmin } from 'App/interfaces/schemainterfaces'
 import bcrypt from 'bcrypt'
 
 const adminSchema = new mongoose.Schema<IAdmin>({
+  profileImage: Object,
   Name: String,
   Mobile: Number,
   Email: String,
   Password: String,
   Address: String,
-  is_Admin: {
-    type: Boolean,
-    default: true,
-  },
 })
 
 adminSchema.pre('save', async function (next) {
